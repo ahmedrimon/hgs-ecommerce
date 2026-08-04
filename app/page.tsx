@@ -1,65 +1,134 @@
-import Image from "next/image";
+// app/page.jsx
+import Link from "next/link";
+import CategoryCarousel from "./components/CategoryCarousel";
+import EditorialGrid from "./components/EditorialGrid";
+import BrandStoryGrid from "./components/BrandStoryGrid";
+import CandlesAndHome from "./components/CandlesAndHome";
+import NewsletterSection from "./components/NewsletterSection";
+import Footer from "./components/Footer";
+
+const galleryItems = [
+  {
+    title: "CLASSIC CANDLES",
+    subtitle: "Timeless Scented Wax",
+    image: "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=800&q=80",
+    link: "/collections/classic-candles",
+  },
+  {
+    title: "EAUX DE PARFUM",
+    subtitle: "High Fragrance Formulations",
+    image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
+    link: "/collections/perfumes",
+  },
+  {
+    title: "ROOM SPRAYS & REFILLS",
+    subtitle: "Atmospheric Scents",
+    image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+    link: "/collections/room-sprays",
+  },
+  {
+    title: "ALABASTERS",
+    subtitle: "Sculpted Diffusers",
+    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80",
+    link: "/collections/alabasters",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="bg-neutral-50 min-h-screen">
+      
+      {/* SECTION 1: HERO CONTAINER */}
+      <section className="relative h-screen w-full overflow-hidden flex items-end pb-16 px-8 md:px-16">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1920&q=80" 
+            alt="Trianon Candle Collection" 
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Soft Dark Vignette Overlay */}
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+
+        {/* Hero Content Overlay */}
+        <div className="relative z-10 max-w-xl text-white space-y-4">
+          <h2 className="font-serif text-4xl md:text-5xl tracking-[0.25em] font-light uppercase">
+            TRIANON
+          </h2>
+          <p className="font-serif text-sm tracking-wider text-neutral-200">
+            Formerly a Limited Edition, Trianon Now Joins Les Exclusives.
+          </p>
+          <div className="pt-2">
+            <Link 
+              href="/collections/trianon" 
+              className="inline-block px-8 py-3 border border-white text-xs tracking-[0.25em] uppercase hover:bg-white hover:text-black transition-all duration-300"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              Discover
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2: GALLERY / COLLECTION GRID */}
+      <section className="py-20 px-4 md:px-12 max-w-7xl mx-auto space-y-12">
+        <div className="text-center space-y-2">
+          <h3 className="font-serif text-2xl tracking-[0.3em] uppercase text-neutral-900">
+            THE COLLECTIONS
+          </h3>
+          <p className="font-serif text-xs tracking-widest text-neutral-500 uppercase">
+            Crafted with French Heritage Since 1643
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Grid layout mirroring luxury store galleries */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {galleryItems.map((item, idx) => (
+            <div key={idx} className="group relative overflow-hidden bg-white shadow-xs">
+              <div className="aspect-[3/4] w-full overflow-hidden">
+                <img 
+                  src={item.image} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              </div>
+              <div className="p-5 text-center space-y-2">
+                <h4 className="font-serif text-xs tracking-[0.2em] font-semibold text-neutral-900 uppercase">
+                  {item.title}
+                </h4>
+                <p className="font-serif text-[11px] text-neutral-500 italic">
+                  {item.subtitle}
+                </p>
+                <div className="pt-2">
+                  <Link 
+                    href={item.link}
+                    className="text-[10px] tracking-[0.2em] uppercase font-semibold text-neutral-800 hover:text-amber-900 transition-colors border-b border-neutral-300 pb-1"
+                  >
+                    Explore Collection
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* SECTION 2: CATEGORY CAROUSEL */}
+      <CategoryCarousel/>
+
+      {/* 2-Column Section */}
+      <EditorialGrid />
+
+      {/* History, Know-How, Services Section */}
+      <BrandStoryGrid />
+
+      {/* Candles and Home + 4-Column Service Perks */}
+      <CandlesAndHome />
+
+      {/* Newsletter Follow Us Section */}
+      <NewsletterSection />
+
+      <Footer />
     </div>
   );
 }
