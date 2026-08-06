@@ -15,6 +15,7 @@ import {
 import { navData } from "../data/navData";
 
 import SearchModal from "./SearchModal";
+import AuthDrawer from "./AuthDrawer";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // Listen for scroll event to trigger dynamic header style change
   useEffect(() => {
@@ -82,9 +84,10 @@ export default function Navbar() {
             <button onClick={() => setIsSearchOpen(true)} className="hover:opacity-75 transition-opacity cursor-pointer " aria-label="Search">
               <Search size={18} />
             </button>
-            <Link href="/account" className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Account">
+            <button onClick={() => setIsAuthOpen(true)} className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Account">
               <User size={18} />
-            </Link>
+            </button>
+            {/* href="/customer/account" */}
             <Link href="/store-locator" className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Stores">
               <MapPin size={18} />
             </Link>
@@ -233,6 +236,9 @@ export default function Navbar() {
 
       {/* Slide-over Drawer */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+        {/* Auth Slide-over Drawer */}
+      <AuthDrawer isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
 }
