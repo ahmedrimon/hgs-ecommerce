@@ -85,7 +85,7 @@ export default function Navbar() {
             <Link href="/account" className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Account">
               <User size={18} />
             </Link>
-            <Link href="/stores" className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Stores">
+            <Link href="/store-locator" className="hidden sm:block hover:opacity-75 transition-opacity" aria-label="Stores">
               <MapPin size={18} />
             </Link>
             <button className="hover:opacity-75 transition-opacity relative cursor-pointer" aria-label="Cart">
