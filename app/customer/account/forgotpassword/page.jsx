@@ -2,59 +2,86 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const supabase = createClient();
+
+  const handleResetRequest = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setMessage("");
+    setErrorMessage("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/customer/account/updatepassword`,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      setMessage("Check your email for the password reset link!");
+    }
   };
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-serif pt-28 pb-20 max-w-md mx-auto px-6">
-      <h1 className="text-xl md:text-2xl tracking-[0.3em] font-light uppercase text-center mb-6">
+      <h1 className="text-xl tracking-[0.25em] font-light uppercase text-center mb-8">
         FORGOT YOUR PASSWORD?
       </h1>
 
-      {submitted && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-4 mb-6 leading-relaxed">
-          If there is an account associated with {email} you will receive an email with a link to reset your password.
+      <p className="text-xs text-neutral-500 mb-6 font-sans leading-relaxed text-center">
+        Please enter your email address below. You will receive a link to reset your password.
+      </p>
+
+      {message && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-3 mb-6">
+          {message}
         </div>
       )}
 
-      <p className="text-xs text-neutral-500 font-light mb-6 text-center">
-        Please enter your email address below to receive a password reset link.
-      </p>
+      {errorMessage && (
+        <div className="bg-red-50 border border-red-200 text-red-800 text-xs p-3 mb-6">
+          {errorMessage}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleResetRequest} className="space-y-4">
         <div>
           <label className="block text-[11px] tracking-widest text-neutral-500 uppercase mb-1">
-            EMAIL
+            Email
           </label>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@trudon.com"
             className="w-full border border-neutral-300 p-2.5 text-xs font-sans focus:outline-none focus:border-black"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full py-3 bg-neutral-900 text-white text-xs tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors"
+          disabled={loading}
+          className="w-full py-3 bg-neutral-900 text-white text-xs tracking-widest uppercase hover:bg-neutral-800 transition-colors disabled:opacity-50"
         >
-          RESET MY PASSWORD
+          {loading ? "SENDING..." : "RESET MY PASSWORD"}
         </button>
 
-        <div className="text-center pt-2">
+        <div className="text-center pt-4">
           <Link
-            href="/customer/account"
-            className="text-xs text-neutral-500 underline underline-offset-4 uppercase"
+            href="/"
+            className="text-xs text-neutral-500 underline underline-offset-4 hover:text-black uppercase tracking-wider"
           >
-            Go back
+            Cancel and Return
           </Link>
         </div>
       </form>
