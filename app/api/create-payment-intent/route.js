@@ -8,13 +8,13 @@ export async function POST(req) {
     const { amount } = await req.json();
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount), // Amount in cents
+      amount: Math.round(amount * 100), // convert to cents
       currency: "eur",
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ["card"], // Apple Pay automatically works via Stripe Payment Request
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

@@ -1,95 +1,118 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import Link from "next/link";
 
 export default function CartDrawer() {
-  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartSubtotal } =
-    useCart();
+  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartSubtotal } = useCart();
 
   if (!isCartOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Backdrop overlay */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={() => setIsCartOpen(false)}
+        className="absolute inset-0 bg-black/40 transition-opacity"
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white p-8 flex flex-col justify-between shadow-2xl">
-          <div>
-            <div className="flex items-center justify-between border-b pb-4 mb-6">
-              <h2 className="text-xs tracking-[0.2em] uppercase font-serif">CART</h2>
-              <button
-                onClick={() => setIsCartOpen(false)}
-                className="text-lg hover:opacity-60"
-              >
-                ✕
-              </button>
-            </div>
+        {/* Drawer Content Panel with Explicit Light Mode Background & Dark Text */}
+        <div className="w-screen max-w-md bg-white text-neutral-900 shadow-xl flex flex-col justify-between">
+          
+          {/* Header */}
+          <div className="p-6 border-b border-neutral-200 flex items-center justify-between">
+            <h2 className="font-serif text-sm tracking-[0.2em] font-medium uppercase text-neutral-900">
+              Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)})
+            </h2>
+            <button
+              onClick={() => setIsCartOpen(false)}
+              className="text-neutral-500 hover:text-neutral-900 p-2 text-sm"
+            >
+              ✕
+            </button>
+          </div>
 
+          {/* Cart Items List */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {cart.length === 0 ? (
-              <p className="text-xs text-neutral-500 font-serif">
-                You have no items in your shopping cart.
+              <p className="text-center font-serif text-xs tracking-widest text-neutral-500 my-12 uppercase">
+                Your cart is empty
               </p>
             ) : (
-              <div className="space-y-6 max-h-[60vh] overflow-y-auto">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex gap-4 items-start border-b pb-4">
+              cart.map((item) => (
+                <div key={item.id} className="flex gap-4 border-b border-neutral-100 pb-6">
+                  {/* Thumbnail */}
+                  <div className="w-20 h-24 bg-neutral-50 flex items-center justify-center p-2 rounded-sm border border-neutral-200 shrink-0">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-16 h-20 object-cover"
+                      className="w-full h-full object-contain"
                     />
-                    <div className="flex-1">
-                      <h3 className="text-xs uppercase font-serif font-medium tracking-wider">
+                  </div>
+
+                  {/* Item Details */}
+                  <div className="flex-1 flex flex-col justify-between font-serif">
+                    <div>
+                      <h3 className="text-xs font-semibold tracking-wider text-neutral-900 uppercase">
                         {item.name}
                       </h3>
-                      <p className="text-xs font-sans mt-1">€{item.price.toFixed(2)}</p>
-                      <div className="flex items-center gap-3 mt-3 text-xs">
-                        <select
-                          value={item.quantity}
-                          onChange={(e) =>
-                            updateQuantity(item.id, Number(e.target.value))
-                          }
-                          className="border p-1 text-xs"
-                        >
-                          {[1, 2, 3, 4, 5].map((n) => (
-                            <option key={n} value={n}>
-                              {n}
-                            </option>
-                          ))}
-                        </select>
+                      <p className="text-xs font-sans text-neutral-600 mt-1">
+                        €{item.price ? item.price.toFixed(2) : "0.00"}
+                      </p>
+                    </div>
+
+                    {/* Quantity Controls & Remove */}
+                    <div className="flex items-center justify-between text-xs font-sans mt-3">
+                      <div className="flex items-center border border-neutral-300 bg-neutral-50">
                         <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-[10px] text-neutral-400 hover:text-red-600 underline uppercase"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="px-2 py-0.5 text-neutral-700 hover:bg-neutral-200"
                         >
-                          Remove
+                          -
+                        </button>
+                        <span className="px-3 py-0.5 text-neutral-900 font-medium">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="px-2 py-0.5 text-neutral-700 hover:bg-neutral-200"
+                        >
+                          +
                         </button>
                       </div>
+
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="text-[10px] tracking-widest text-neutral-400 hover:text-red-600 uppercase transition-colors"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))
             )}
           </div>
 
+          {/* Footer Subtotal & Checkout Button */}
           {cart.length > 0 && (
-            <div className="border-t pt-6 space-y-4">
-              <div className="flex justify-between text-xs tracking-widest font-serif">
-                <span>CART SUBTOTAL</span>
-                <span>€{cartSubtotal.toFixed(2)}</span>
+            <div className="p-6 border-t border-neutral-200 bg-white font-serif space-y-4">
+              <div className="flex justify-between items-center text-xs tracking-widest uppercase">
+                <span className="text-neutral-600">Cart Subtotal</span>
+                <span className="text-neutral-900 font-bold font-sans">
+                  €{cartSubtotal ? cartSubtotal.toFixed(2) : "0.00"}
+                </span>
               </div>
-              <Link
+
+              <a
                 href="/checkout/cart"
-                onClick={() => setIsCartOpen(false)}
-                className="block w-full py-3.5 bg-neutral-900 text-white text-center text-xs tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors"
+                className="block w-full text-center py-3.5 bg-neutral-900 text-white text-xs tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors"
               >
-                VIEW CART
-              </Link>
+                View Cart
+              </a>
             </div>
           )}
+
         </div>
       </div>
     </div>
