@@ -1,3 +1,5 @@
+"use client";
+
 // app/page.jsx
 import Link from "next/link";
 import CategoryCarousel from "./components/CategoryCarousel";
@@ -5,7 +7,6 @@ import EditorialGrid from "./components/EditorialGrid";
 import BrandStoryGrid from "./components/BrandStoryGrid";
 import CandlesAndHome from "./components/CandlesAndHome";
 import NewsletterSection from "./components/NewsletterSection";
-import Footer from "./components/Footer";
 
 const galleryItems = [
   {
@@ -35,6 +36,7 @@ const galleryItems = [
 ];
 
 export default function Home() {
+
   return (
     <div className="bg-neutral-50 min-h-screen">
       
@@ -128,7 +130,6 @@ export default function Home() {
       {/* Newsletter Follow Us Section */}
       <NewsletterSection />
 
-      <Footer />
     </div>
   );
 }

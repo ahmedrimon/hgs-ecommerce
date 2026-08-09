@@ -2,7 +2,12 @@
 
 import { Inter } from "next/font/google";
 import Navbar from "./components/Navbar"; // Imports your Navbar component
+
+import { CartProvider } from "../context/CartContext"; // Imports your CartProvider component
 import "./globals.css";
+
+import CartDrawer from "./components/CartDrawer"; // Adjust path if needed
+import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,9 +28,11 @@ export default function RootLayout({
         <Navbar />
 
         {/* Page contents (page.js files) will render here */}
-        <main className="min-h-screen">
+        <CartProvider>
           {children}
-        </main>
+          <CartDrawer /> {/* MUST BE HERE */}
+        </CartProvider>
+        <Footer/>
       </body>
     </html>
   );
