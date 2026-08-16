@@ -2,7 +2,7 @@
 
 A modern, responsive e-commerce web application inspired by **Maison Trudon**. Built with **Next.js 14 (App Router)**, **Tailwind CSS**, and **React Context API**, this platform showcases high-end luxury candles, hand lotions, diffusers, and perfumes with interactive shopping cart state and custom collection pages.
 
-🚀 **Live Demo:** [https://your-project-name.vercel.app](https://your-project-name.vercel.app)
+🚀 **Live Demo:** [https://your-project-name.vercel.app](https://hgs-ecommerce.vercel.app)
 
 ---
 
