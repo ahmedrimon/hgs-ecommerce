@@ -101,7 +101,7 @@ export default function CategoryCarousel() {
                 </h3>
                 <div>
                   <Link
-                    href={cat.link}
+                    href="/category/eaux-de-parfum"
                     className="inline-block px-6 py-2.5 border border-neutral-900 text-[10px] tracking-[0.2em] font-semibold text-neutral-900 uppercase hover:bg-neutral-900 hover:text-white transition-colors duration-300"
                   >
                     Discover

@@ -63,7 +63,7 @@ export default function Home() {
           </p>
           <div className="pt-2">
             <Link 
-              href="/collections/trianon" 
+              href="/category/eaux-de-parfum" 
               className="inline-block px-8 py-3 border border-white text-xs tracking-[0.25em] uppercase hover:bg-white hover:text-black transition-all duration-300"
             >
               Discover
