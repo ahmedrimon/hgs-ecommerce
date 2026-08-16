@@ -3,7 +3,7 @@
 import { Inter } from "next/font/google";
 import Navbar from "./components/Navbar"; // Imports your Navbar component
 
-import { CartProvider } from "../context/CartContext"; // Imports your CartProvider component
+import { CartProvider } from "../context/cartContext"; // Imports your CartProvider component
 import "./globals.css";
 
 import CartDrawer from "./components/CartDrawer"; // Adjust path if needed
