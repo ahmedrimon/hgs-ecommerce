@@ -1,6 +1,6 @@
 "use client";
 
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartSubtotal } = useCart();
