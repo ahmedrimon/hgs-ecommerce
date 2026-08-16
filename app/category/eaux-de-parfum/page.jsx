@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useCart } from "@/context/CartContext";
 
 const HEADER_BG_IMAGE =
@@ -135,23 +135,83 @@ function SafeProductCard({ product }) {
 export default function EauxDeParfumPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Detect scroll to trigger background and color transition
+  // Accordion open state inside the drawer
+  const [openAccordions, setOpenAccordions] = useState({
+    capacity: true,
+    selection: false,
+    price: false,
+  });
+
+  // Selected filter states
+  const [selectedCapacity, setSelectedCapacity] = useState([]);
+  const [selectedSelection, setSelectedSelection] = useState([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+
+  // Detect scroll to trigger navbar shadow
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 80);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleAccordion = (key) => {
+    setOpenAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleCheckboxToggle = (value, state, setState) => {
+    setState(
+      state.includes(value)
+        ? state.filter((item) => item !== value)
+        : [...state, value]
+    );
+  };
+
+  // Filter products based on sub-nav tab & filter drawer choices
+  const filteredProducts = useMemo(() => {
+    return PERFUMES_DATA.filter((product) => {
+      // 1. Sub-nav Tab Filtering
+      if (activeTab === "travel" && product.size !== "15ml") return false;
+
+      // 2. Capacity Filter
+      if (
+        selectedCapacity.length > 0 &&
+        !selectedCapacity.includes(product.size)
+      ) {
+        return false;
+      }
+
+      // 3. Selection Filter
+      if (
+        selectedSelection.length > 0 &&
+        !selectedSelection.includes(product.badge)
+      ) {
+        return false;
+      }
+
+      // 4. Price Filter Range
+      if (selectedPriceRanges.length > 0) {
+        const matchesPrice = selectedPriceRanges.some((range) => {
+          if (range === "0-50") return product.price >= 0 && product.price <= 50;
+          if (range === "50-100") return product.price > 50 && product.price <= 100;
+          if (range === "100-200") return product.price > 100 && product.price <= 200;
+          if (range === "200-250") return product.price > 200 && product.price <= 250;
+          if (range === "250+") return product.price > 250;
+          return false;
+        });
+        if (!matchesPrice) return false;
+      }
+
+      return true;
+    });
+  }, [activeTab, selectedCapacity, selectedSelection, selectedPriceRanges]);
+
   return (
-    <main className="min-h-screen bg-white text-neutral-900">
+    <main className="min-h-screen bg-white text-neutral-900 relative">
       {/* 1. Hero Header Container */}
       <div className="relative h-[380px] md:h-[450px] w-full overflow-hidden flex items-end justify-center pb-16 bg-neutral-900">
         <img
@@ -159,7 +219,6 @@ export default function EauxDeParfumPage() {
           alt="The Eaux De Parfum Header"
           className="absolute inset-0 w-full h-full object-cover opacity-65"
         />
-        {/* Dark overlay gradient for contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
 
         <div className="relative z-10 text-center text-white space-y-2 px-4">
@@ -209,7 +268,10 @@ export default function EauxDeParfumPage() {
             </button>
           </div>
 
-          <button className="flex items-center gap-2 text-neutral-500 hover:text-black transition-colors">
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="flex items-center gap-2 text-neutral-500 hover:text-black transition-colors"
+          >
             <span>FILTERS</span>
             <span>≡</span>
           </button>
@@ -218,12 +280,150 @@ export default function EauxDeParfumPage() {
 
       {/* 3. Products Grid */}
       <section className="max-w-7xl mx-auto border-l border-neutral-200">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {PERFUMES_DATA.map((product) => (
-            <SafeProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {filteredProducts.map((product) => (
+              <SafeProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-24 text-center font-serif text-neutral-400 text-xs tracking-widest uppercase">
+            No products match the selected filters.
+          </div>
+        )}
       </section>
+
+      {/* 4. Filter Drawer Backdrop Overlay */}
+      {isFilterOpen && (
+        <div
+          onClick={() => setIsFilterOpen(false)}
+          className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+        />
+      )}
+
+      {/* 5. Trudon-Style Slide-Over Filter Panel */}
+      <aside
+        className={`fixed top-0 right-0 h-full w-80 bg-white z-50 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isFilterOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <h2 className="text-xs uppercase tracking-[0.25em] font-semibold font-serif">
+            FILTERS
+          </h2>
+          <button
+            onClick={() => setIsFilterOpen(false)}
+            className="text-2xl leading-none text-neutral-400 hover:text-black"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6 divide-y divide-neutral-200 text-xs font-sans">
+          {/* Capacity Section */}
+          <div className="py-4">
+            <button
+              onClick={() => toggleAccordion("capacity")}
+              className="w-full flex justify-between items-center font-serif uppercase tracking-wider text-left py-1"
+            >
+              Capacity <span>{openAccordions.capacity ? "ˆ" : "ˇ"}</span>
+            </button>
+            {openAccordions.capacity && (
+              <div className="grid grid-cols-2 gap-2 pt-3">
+                {["15ml", "100ml"].map((cap) => (
+                  <button
+                    key={cap}
+                    onClick={() =>
+                      handleCheckboxToggle(cap, selectedCapacity, setSelectedCapacity)
+                    }
+                    className={`py-2 text-center border text-xs transition-colors ${
+                      selectedCapacity.includes(cap)
+                        ? "border-black bg-neutral-900 text-white"
+                        : "border-neutral-200 hover:border-black text-neutral-600"
+                    }`}
+                  >
+                    {cap}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Selection Section */}
+          <div className="py-4">
+            <button
+              onClick={() => toggleAccordion("selection")}
+              className="w-full flex justify-between items-center font-serif uppercase tracking-wider text-left py-1"
+            >
+              Selection <span>{openAccordions.selection ? "ˆ" : "ˇ"}</span>
+            </button>
+            {openAccordions.selection && (
+              <div className="space-y-2 pt-3">
+                {["ICONS"].map((item) => (
+                  <label key={item} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedSelection.includes(item)}
+                      onChange={() =>
+                        handleCheckboxToggle(item, selectedSelection, setSelectedSelection)
+                      }
+                      className="accent-black"
+                    />
+                    <span className="text-neutral-600">{item}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Price Section */}
+          <div className="py-4">
+            <button
+              onClick={() => toggleAccordion("price")}
+              className="w-full flex justify-between items-center font-serif uppercase tracking-wider text-left py-1"
+            >
+              Price <span>{openAccordions.price ? "ˆ" : "ˇ"}</span>
+            </button>
+            {openAccordions.price && (
+              <div className="space-y-2.5 pt-3">
+                {[
+                  { label: "€0.00 - €50.00", value: "0-50" },
+                  { label: "€50.00 - €100.00", value: "50-100" },
+                  { label: "€100.00 - €200.00", value: "100-200" },
+                  { label: "€200.00 - €250.00", value: "200-250" },
+                  { label: "€250.00 and above", value: "250+" },
+                ].map((range) => (
+                  <label key={range.value} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedPriceRanges.includes(range.value)}
+                      onChange={() =>
+                        handleCheckboxToggle(
+                          range.value,
+                          selectedPriceRanges,
+                          setSelectedPriceRanges
+                        )
+                      }
+                      className="accent-black"
+                    />
+                    <span className="text-neutral-600">{range.label}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Apply Button */}
+        <div className="p-6 border-t border-neutral-200">
+          <button
+            onClick={() => setIsFilterOpen(false)}
+            className="w-full py-3.5 bg-neutral-900 text-white text-xs tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors font-serif"
+          >
+            APPLY FILTERS
+          </button>
+        </div>
+      </aside>
     </main>
   );
 }
