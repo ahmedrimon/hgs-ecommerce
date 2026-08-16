@@ -1,33 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maison Trudon — Luxury E-Commerce Experience
 
-## Getting Started
+A modern, responsive e-commerce web application inspired by **Maison Trudon**. Built with **Next.js 14 (App Router)**, **Tailwind CSS**, and **React Context API**, this platform showcases high-end luxury candles, hand lotions, diffusers, and perfumes with interactive shopping cart state and custom collection pages.
 
-First, run the development server:
+🚀 **Live Demo:** [https://your-project-name.vercel.app](https://your-project-name.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Collection Pages:** Custom landing pages for signature collections including *Carmen* and *Cire*, featuring luxury editorial banners, detailed story sections, and scent profile grids.
+* **Novelties & Product Browsing:** Complete product showcase with filterable categories (Candles, Perfumes, Gifts, Decoration) and slide-over filtering drawer.
+* **Interactive Shopping Cart:** Full client-side cart management powered by React Context (`useCart`) allowing instant addition, badge notifications, and price subtotals.
+* **Serverless API Routes:** Integrated Next.js API endpoints for secure payment intent handling and dynamic data fetching.
+* **Responsive & Pixel-Perfect UI:** Modern serif typography, clean grid structures, hover micro-interactions, and fully mobile-friendly layouts built with Tailwind CSS.
+* **Dynamic Metadata & Favicon:** Integrated Next.js Metadata API with custom SVG favicon support.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+* **Framework:** Next.js 14 (App Router)
+* **Styling:** Tailwind CSS
+* **Language:** JavaScript (ES6+) / React
+* **State Management:** React Context API (`CartContext`)
+* **Icons & Media:** Lucide React / Unsplash Imagery
+* **Deployment:** Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📂 Project Structure
+
+```text
+├── app/
+│   ├── api/
+│   │   └── create-payment-intent/    # Serverless API route for payments
+│   ├── collections/
+│   │   ├── carmen/                   # Carmen collection landing page
+│   │   └── cire/                     # Cire collection landing page
+│   ├── novelties/                    # Novelties (See All) catalog page
+│   ├── icon.svg                      # Custom dynamic SVG favicon
+│   ├── layout.jsx                    # Root layout & global providers
+│   └── page.jsx                      # Homepage
+├── context/
+│   └── CartContext.jsx               # Shopping cart state management
+├── public/                           # Static assets
+└── package.json
 
 ## Deploy on Vercel
 
